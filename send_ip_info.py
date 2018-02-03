@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+#
+# 设置定时执行
+# crontab -e
+# 0 * * * * /code/send_ip_info.py
 """
 作者：金鹏
 时间：2018-02-03

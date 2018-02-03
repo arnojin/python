@@ -98,7 +98,13 @@ def send_ip_info():
     if (last_ip != ip) :
         # 追加新的ip地址
         ip_info_file = open('ip_info.txt', 'a')
-        ip_info_file.write('\r' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' ' + ip)
+
+        # 在 windows 下对换行处理不同
+        #ip_info_file.write('\r' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' ' + ip)
+
+        # 在 linxu 下不用处理
+        ip_info_file.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' ' + ip)
+
         ip_info_file.close()
         
         # 邮件内容

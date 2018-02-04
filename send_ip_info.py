@@ -11,7 +11,7 @@
 """
 
 import logging
-logging.basicConfig(filename='log.log',
+logging.basicConfig(filename='/code/log.log',
                     format='[%(asctime)s -%(name)s-%(levelname)s-%(module)s]%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S %p',
                     level=logging.DEBUG)
@@ -87,7 +87,7 @@ def send_ip_info():
 
     # 读取之前保存的ip地址信息
     # ip_info.txt 文件中默认有一条记录： 2018-02-03 20:30:57 1.2.3.4
-    ip_info_file    = open('ip_info.txt', 'r')
+    ip_info_file    = open('/code/ip_info.txt', 'r')
     ip_info         = ip_info_file.readlines()
     ip_info_file.close()
     last_line       = ip_info[-1]
@@ -101,7 +101,7 @@ def send_ip_info():
 
     if (last_ip != ip) :
         # 追加新的ip地址
-        ip_info_file = open('ip_info.txt', 'a')
+        ip_info_file = open('/code/ip_info.txt', 'a')
 
         # 在 windows 下对换行处理不同
         #ip_info_file.write('\r' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + ' ' + ip)

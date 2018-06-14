@@ -75,7 +75,7 @@ def get_yxk():
     # url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-2720.dhtml'
 
     all_content = ''
-    for url_index in range(0, 40, 20):
+    for url_index in range(0, 20, 20):
         url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-' + str(url_index) + '.dhtml'
 
         soup =  get_soup(url)
@@ -100,16 +100,19 @@ def get_yxk():
                     for text in td.strings:
                         info = info + ' ' + text.strip()
 
+                    for a in td.find_all('a'):
+                        href = a.get('href')
+                        if(href.startswith('/sch/')):
+                            info = info + ' ' + href.strip()
+
                     all_content = all_content + "\t" + info.strip()
         
         msg = 'url_index = ' + str(url_index) + ', trs_len = ' + str(trs_len)
         log.info(msg)
         time.sleep(1)
 
-    print(all_content)
-
     log.info("结束 。")
-    return
+    return all_content
 
 # 主程序
 if __name__ == '__main__':
@@ -117,6 +120,7 @@ if __name__ == '__main__':
 
     # 1、爬取 院校库（http://gaokao.chsi.com.cn/sch/search--ss-on,option-qg,searchType-1,start-0.dhtml）
     #    获取 院校名称，院校所在地，院校隶属，院校类型，学历层次，院校特性，研究生院，满意度
-    get_yxk()
+    yxk = get_yxk()
+    print(yxk)
 
     log.info("结束 。")

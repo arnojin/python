@@ -19,27 +19,28 @@
         http://gaokao.chsi.com.cn/z/gkbmfslq2017/pcx.jsp
 """
 
-
 import logging
+
 logging.basicConfig(filename='./log.log',
                     format='[%(asctime)s -%(name)s-%(levelname)s-%(funcName)s]%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S %p',
                     level=logging.DEBUG)
 log = logging.getLogger('chsi_info')
 sh = logging.StreamHandler()
-sh.setLevel(level = logging.DEBUG)
+sh.setLevel(level=logging.DEBUG)
 formatter = logging.Formatter('[%(asctime)s -%(name)s-%(levelname)s-%(funcName)s]%(message)s')
 sh.setFormatter(formatter)
 log.addHandler(sh)
 
 
-# 爬取 页面内容
 def get_html(url):
+    """
+    爬取 页面内容
+    """
+
     log.info("开始 ...")
 
     from urllib import request
-    # user_agent = 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36'
-    # headers = {'User-Agent':user_agent}
     response_result = request.urlopen(url).read()
     html = response_result.decode('utf-8')
 
@@ -47,22 +48,28 @@ def get_html(url):
     return html
 
 
-# 返回 soup 对象
 def get_soup(url):
+    """
+    返回 soup 对象
+    """
+
     log.info("开始 ...")
 
     from bs4 import BeautifulSoup
     html = get_html(url)
     # soup = BeautifulSoup(html, 'html.parser')
-    soup =  BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(html, 'lxml')
     # print(soup.prettify())
 
     log.info("结束 。")
     return soup
 
 
-# 获取 院校库 页面内容
 def get_yxk():
+    """
+    获取 院校库 页面内容
+    """
+
     log.info("开始 ...")
     import time
 
@@ -78,20 +85,19 @@ def get_yxk():
     for url_index in range(0, 40, 20):
         url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-' + str(url_index) + '.dhtml'
 
-        soup =  get_soup(url)
+        soup = get_soup(url)
 
         trs = soup.table.find_all('tr')
         trs_len = len(trs)
 
         for tr_index in range(0, trs_len):
-            tag_name = ''
-            if( (0 == tr_index) and (0 == url_index) ):
+            if (0 == tr_index) and (0 == url_index):
                 tag_name = 'th'
             else:
                 tag_name = 'td'
 
             tds = trs[tr_index].find_all(tag_name)
-            if(len(tds) > 0):
+            if 0 < len(tds):
                 all_content = all_content + "\r\n" + str(url_index) + ':' + str(tr_index) + ' '
                 i = 0
                 for td in tds:
@@ -102,11 +108,11 @@ def get_yxk():
 
                     for a in td.find_all('a'):
                         href = a.get('href')
-                        if(href.startswith('/sch/')):
+                        if href.startswith('/sch/'):
                             info = info + ' ' + href.strip()
 
                     all_content = all_content + "\t" + info.strip()
-        
+
         msg = 'url_index = ' + str(url_index) + ', trs_len = ' + str(trs_len)
         log.info(msg)
         time.sleep(1)
@@ -115,8 +121,11 @@ def get_yxk():
     return all_content
 
 
-# 主程序
-if __name__ == '__main__':
+def main():
+    """
+    主程序
+    """
+
     log.info("开始 ...")
 
     # 1、爬取 院校库（http://gaokao.chsi.com.cn/sch/search--ss-on,option-qg,searchType-1,start-0.dhtml）
@@ -125,3 +134,7 @@ if __name__ == '__main__':
     print(yxk)
 
     log.info("结束 。")
+
+
+if __name__ == '__main__':
+    main()

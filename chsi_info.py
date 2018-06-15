@@ -134,6 +134,7 @@ def main():
     print(yxk)
 
     log.info("结束 。")
+    return
 
 
 if __name__ == '__main__':

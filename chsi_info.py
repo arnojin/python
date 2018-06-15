@@ -22,13 +22,13 @@
 
 import logging
 logging.basicConfig(filename='./log.log',
-                    format='[%(asctime)s -%(name)s-%(levelname)s-%(module)s]%(message)s',
+                    format='[%(asctime)s -%(name)s-%(levelname)s-%(funcName)s]%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S %p',
                     level=logging.DEBUG)
 log = logging.getLogger('chsi_info')
 sh = logging.StreamHandler()
 sh.setLevel(level = logging.DEBUG)
-formatter = logging.Formatter('[%(asctime)s -%(name)s-%(levelname)s-%(module)s]%(message)s')
+formatter = logging.Formatter('[%(asctime)s -%(name)s-%(levelname)s-%(funcName)s]%(message)s')
 sh.setFormatter(formatter)
 log.addHandler(sh)
 
@@ -75,7 +75,7 @@ def get_yxk():
     # url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-2720.dhtml'
 
     all_content = ''
-    for url_index in range(0, 20, 20):
+    for url_index in range(0, 40, 20):
         url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-' + str(url_index) + '.dhtml'
 
         soup =  get_soup(url)
@@ -113,6 +113,7 @@ def get_yxk():
 
     log.info("结束 。")
     return all_content
+
 
 # 主程序
 if __name__ == '__main__':

@@ -111,7 +111,7 @@ def get_yxk():
                         if href.startswith('/sch/'):
                             info = info + ' ' + href.strip()
 
-                    all_content = all_content + "\t" + info.strip()
+                    all_content = all_content + ',' + info.strip()
 
         msg = 'url_index = ' + str(url_index) + ', trs_len = ' + str(trs_len)
         log.info(msg)
@@ -131,7 +131,8 @@ def main():
     # 1、爬取 院校库（http://gaokao.chsi.com.cn/sch/search--ss-on,option-qg,searchType-1,start-0.dhtml）
     #    获取 院校名称，院校所在地，院校隶属，院校类型，学历层次，院校特性，研究生院，满意度
     yxk = get_yxk()
-    print(yxk)
+    open('yxk-utf8.csv', 'wb').write(yxk.encode('UTF-8'))
+    open('yxk-gb18030.csv', 'wb').write(yxk.encode('GB18030'))
 
     log.info("结束 。")
     return

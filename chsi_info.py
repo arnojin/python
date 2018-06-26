@@ -80,7 +80,10 @@ def get_yxk():
     # url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-2720.dhtml'
 
     all_content = ''
-    for url_index in range(0, 40, 20):
+    url_begin = 0
+    url_end = 40 #2740
+    url_step = 20
+    for url_index in range(url_begin, url_end, url_step):
         url = 'http://gaokao.chsi.com.cn/sch/search--ss-on,searchType-1,option-qg,start-' + str(url_index) + '.dhtml'
 
         soup = get_soup(url)
@@ -89,27 +92,36 @@ def get_yxk():
         trs_len = len(trs)
 
         for tr_index in range(0, trs_len):
-            if (0 == tr_index) and (0 == url_index):
-                tag_name = 'th'
-            else:
-                tag_name = 'td'
+            # if (0 == tr_index) and (0 == url_index):
+            #     tag_name = 'th'
+            # else:
+            #     tag_name = 'td'
+            tag_name = 'td'
 
             tds = trs[tr_index].find_all(tag_name)
             if 0 < len(tds):
-                all_content = all_content + "\r\n" + str(url_index) + ':' + str(tr_index) + ' '
-                i = 0
+                all_content = all_content + str(url_index) + ',' + str(tr_index)
                 for td in tds:
                     info = ''
-                    i += 1
                     for text in td.strings:
-                        info = info + ' ' + text.strip()
+                        t = text.strip()
+                        if '' != t:
+                            info = info + ',' + t
 
                     for a in td.find_all('a'):
                         href = a.get('href')
                         if href.startswith('/sch/'):
-                            info = info + ' ' + href.strip()
+                            sch_id = href.replace('/sch/schoolInfo--schId-', '')
+                            sch_id = sch_id.replace('.dhtml', '')
+                            info = info + ',' + sch_id
+                            info = info + ',' + 'http://gaokao.chsi.com.cn' + href
+                            info = info + ',' + 'http://gaokao.chsi.com.cn/sch/schoolInfoMain.do?schId=' + sch_id + '&ssdm=44&lqfsyear=2014&kldm=5#lqfs'
+                            info = info + ',' + 'http://gaokao.chsi.com.cn/sch/schoolInfoMain.do?schId=' + sch_id + '&ssdm=44&lqfsyear=2015&kldm=5#lqfs'
+                            info = info + ',' + 'http://gaokao.chsi.com.cn/sch/schoolInfoMain.do?schId=' + sch_id + '&ssdm=44&lqfsyear=2016&kldm=5#lqfs'
+                            info = info + ',' + 'http://gaokao.chsi.com.cn/sch/schoolInfoMain.do?schId=' + sch_id + '&ssdm=44&lqfsyear=2017&kldm=5#lqfs'
 
-                    all_content = all_content + ',' + info.strip()
+                    all_content = all_content + info.strip()
+                all_content = all_content + "\r\n"
 
         msg = 'url_index = ' + str(url_index) + ', trs_len = ' + str(trs_len)
         log.info(msg)
